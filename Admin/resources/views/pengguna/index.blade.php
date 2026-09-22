@@ -2,8 +2,8 @@
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-rose-600">Manajemen Pengguna</h2>
         <div class="relative w-72">
-            <input type="text" placeholder="Cari nama, email, NIK..." class="w-full pl-9 pr-4 py-2 bg-white border border-rose-100 rounded-xl text-xs focus:ring-rose-500 focus:border-rose-500">
-            <span class="absolute left-3 top-2 text-gray-400 text-xs">🔍</span>
+            <input type="text" placeholder="Cari nama, email..." class="w-full pl-9 pr-4 py-2 bg-white border border-rose-100 rounded-xl text-xs focus:ring-rose-500 focus:border-rose-500 shadow-sm">
+            <span class="absolute left-3 top-2.5 text-gray-400 text-xs">🔍</span>
         </div>
     </div>
 
@@ -20,28 +20,29 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 text-xs">
-                <tr class="hover:bg-rose-50/20">
-                    <td class="py-4 px-4 font-bold text-gray-800 flex items-center gap-3">
-                        <img src="https://ui-avatars.com/api/?name=Revita+Sari&background=f43f5e&color=fff" class="w-8 h-8 rounded-full object-cover">
-                        Revita Sari
+                @forelse($penggunas as $user)
+                <tr class="hover:bg-rose-50/30 transition">
+                    <td class="py-4 px-4 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-xs uppercase shadow-sm">
+                            {{ substr($user->name ?? $user->nama ?? 'U', 0, 2) }}
+                        </div>
+                        <span class="font-semibold text-gray-800">{{ $user->name ?? $user->nama ?? '-' }}</span>
                     </td>
-                    <td class="py-4 px-4 text-gray-600">revita.sari@gmail.com</td>
-                    <td class="py-4 px-4 text-gray-600">0812-3456-7890</td>
-                    <td class="py-4 px-4 text-gray-500">12 Apr 2025</td>
-                    <td class="py-4 px-4 font-bold text-rose-600">1 Laporan</td>
-                    <td class="py-4 px-4"><a href="#" class="text-rose-600 font-bold hover:underline">Detail</a></td>
-                </tr>
-                <tr class="hover:bg-rose-50/20">
-                    <td class="py-4 px-4 font-bold text-gray-800 flex items-center gap-3">
-                        <img src="https://ui-avatars.com/api/?name=Daffa+Pratama&background=3b82f6&color=fff" class="w-8 h-8 rounded-full object-cover">
-                        Daffa Pratama
+                    <td class="py-4 px-4 text-gray-600">{{ $user->email ?? '-' }}</td>
+                    <td class="py-4 px-4 text-gray-600">{{ $user->no_hp ?? $user->telepon ?? $user->nomor_hp ?? '-' }}</td>
+                    <td class="py-4 px-4 text-gray-500">{{ optional($user->created_at)->format('d M Y') ?? '-' }}</td>
+                    <td class="py-4 px-4 font-bold text-rose-600">
+                        {{ \App\Models\Laporan::where('id_pengguna', $user->id ?? $user->id_pengguna)->count() }} Laporan
                     </td>
-                    <td class="py-4 px-4 text-gray-600">daffa.pratama@yahoo.com</td>
-                    <td class="py-4 px-4 text-gray-600">0823-4567-8901</td>
-                    <td class="py-4 px-4 text-gray-500">08 Mar 2025</td>
-                    <td class="py-4 px-4 font-bold text-rose-600">2 Laporan</td>
-                    <td class="py-4 px-4"><a href="#" class="text-rose-600 font-bold hover:underline">Detail</a></td>
+                    <td class="py-4 px-4">
+                     <a href="{{ route('pengguna.show', $user->id) }}" class="text-rose-500 font-bold hover:underline cursor-pointer">Detail</a>
+                    </td>
                 </tr>
+                @empty
+                <tr>
+                    <td colspan="6" class="text-center py-8 text-gray-400">Belum ada data pengguna terdaftar di database.</td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

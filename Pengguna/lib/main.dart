@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'theme.dart';
-import 'navbar.dart';
+import 'navbar.dart'; // <--- Mengarah ke halaman utama/navbar pengguna
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +20,8 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: AppTheme.bgLight,
         textTheme: GoogleFonts.plusJakartaSansTextTheme(Theme.of(context).textTheme),
       ),
-      home: const NavbarPage(),
+      // Aplikasi langsung terbuka di Halaman Utama (Navbar/Beranda)
+      home: const NavbarPage(), 
     );
   }
 }

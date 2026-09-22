@@ -47,6 +47,39 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // --- FUNGSI CEK STATUS SEBELUM BUKA FORM (Mencegah buat laporan jika belum Selesai) ---
+  Future<void> _cekDanBukaForm() async {
+    if (_laporanTerakhir != null) {
+      String status = _laporanTerakhir!['status_penanganan'] ?? 'Selesai';
+      
+      if (status != 'Selesai') {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Tidak Dapat Membuat Laporan', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, fontSize: 16)),
+            content: Text(
+              'Anda masih memiliki laporan aktif dengan status "$status". Harap tunggu hingga laporan sebelumnya selesai ditangani sebelum membuat laporan baru.',
+              style: GoogleFonts.plusJakartaSans(fontSize: 13),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, color: AppTheme.primaryPink)),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+    }
+
+    final hasil = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const Form1Page()),
+    );
+    if (hasil == true) _ambilData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseLayout(
@@ -89,10 +122,7 @@ class _HomePageState extends State<HomePage> {
 
           // Tombol Buat Laporan
           InkWell(
-            onTap: () async {
-              final hasil = await Navigator.push(context, MaterialPageRoute(builder: (_) => const Form1Page()));
-              if (hasil == true) _ambilData();
-            },
+            onTap: _cekDanBukaForm,
             borderRadius: BorderRadius.circular(16),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -157,17 +187,43 @@ class _HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text('LAP-${_laporanTerakhir!['id_laporan']}', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, fontSize: 14, color: AppTheme.primaryPink)),
-                                Text(_laporanTerakhir!['tanggal_kejadian'] ?? '', style: GoogleFonts.plusJakartaSans(fontSize: 11, color: AppTheme.textGrey)),
+                                
+                                // Tanggal Bersih Tanpa 00000Z
+                                Text(
+                                  _laporanTerakhir!['tanggal_kejadian'] != null 
+                                      ? _laporanTerakhir!['tanggal_kejadian'].toString().split('T').first 
+                                      : '', 
+                                  style: GoogleFonts.plusJakartaSans(fontSize: 11, color: AppTheme.textGrey),
+                                ),
                               ],
                             ),
                             const SizedBox(height: 8),
                             Text(_laporanTerakhir!['kategori'] ?? '', style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(color: AppTheme.badgeYellowBg, borderRadius: BorderRadius.circular(6)),
-                              child: Text(_laporanTerakhir!['status_penanganan'] ?? 'Menunggu Verifikasi', style: GoogleFonts.plusJakartaSans(color: AppTheme.badgeYellowText, fontSize: 11, fontWeight: FontWeight.bold)),
+                            
+                            // Badge Status dengan Warna Dinamis (Kuning, Biru, Hijau)
+                            Builder(
+                              builder: (context) {
+                                String statusText = _laporanTerakhir!['status_penanganan'] ?? 'Menunggu Verifikasi';
+                                Color bgColor = const Color(0xFFFEF3C7); // Kuning
+                                Color textColor = const Color(0xFFD97706);
+                                
+                                if (statusText == 'Sedang Diproses' || statusText == 'Diproses') {
+                                  bgColor = const Color(0xFFDBEAFE); // Biru
+                                  textColor = const Color(0xFF1D4ED8);
+                                } else if (statusText == 'Selesai') {
+                                  bgColor = const Color(0xFFD1FAE5); // Hijau
+                                  textColor = const Color(0xFF059669);
+                                }
+
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(6)),
+                                  child: Text(statusText, style: GoogleFonts.plusJakartaSans(color: textColor, fontSize: 11, fontWeight: FontWeight.bold)),
+                                );
+                              },
                             ),
+
                           ],
                         ),
                       ),

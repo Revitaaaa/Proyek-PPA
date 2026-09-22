@@ -12,7 +12,6 @@ class ProgresPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseLayout(
       showBackButton: true,
-      headerTitle: 'Progres Laporan',
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Column(

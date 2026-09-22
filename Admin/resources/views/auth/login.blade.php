@@ -3,53 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAPA - Masuk Admin</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <title>Login Admin - SAPA (Sistem Pelaporan Aman)</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
 </head>
-<body class="bg-rose-50/40 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gradient-to-br from-rose-50 via-white to-rose-100 min-h-screen flex items-center justify-center p-4">
 
-    <div class="w-full max-w-md bg-white rounded-3xl shadow-xl shadow-rose-100 overflow-hidden border border-rose-50">
-       <!-- Card Header -->
-<div class="bg-rose-500 py-8 px-6 text-center text-white">
-    <div class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3 p-3">
-        <!-- SVG Logo Gambar 2 -->
-        <svg class="w-full h-full text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-            <path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08v0c.82.82 2.13.85 3 .07l2.07-1.9"/>
-            <path d="m14 10 1.5 1.5"/>
-        </svg>
-    </div>
-    <h1 class="font-extrabold text-lg tracking-wider">SAPA INDONESIA</h1>
-</div>
+    <div class="w-full max-w-md">
+        <!-- Kartu Login -->
+        <div class="bg-white rounded-3xl shadow-xl shadow-rose-100/50 border border-rose-100 p-8 sm:p-10">
+            
+            <!-- Logo & Header -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-rose-500 rounded-2xl shadow-lg shadow-rose-500/30 mb-4">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-black text-gray-800 tracking-tight">SAPA</h1>
+                <p class="text-xs font-semibold text-rose-500 tracking-widest uppercase mt-0.5">Sistem Pelaporan Aman</p>
+                <div class="mt-4 inline-block bg-rose-50 text-rose-600 text-xs font-bold px-3 py-1 rounded-full border border-rose-100">
+                    Portal Masuk Admin
+                </div>
+            </div>
 
-        <!-- Card Body -->
-        <div class="p-8">
-            <h2 class="text-xl font-bold text-rose-600 mb-1">Masuk sebagai Admin</h2>
-            <p class="text-xs text-gray-400 mb-6">Silakan masuk untuk mengelola pengaduan</p>
+            <!-- Notifikasi Error (Jika ada) -->
+            @if(session('error'))
+                <div class="mb-5 p-3.5 bg-rose-50 border border-rose-200 text-rose-600 rounded-xl text-xs font-semibold flex items-center gap-2">
+                    <span>⚠️</span>
+                    <span>{{ session('error') }}</span>
+                </div>
+            @endif
 
-            <form action="{{ route('dashboard') }}" method="GET" class="space-y-4">
+            <!-- Form Login -->
+            <form action="{{ route('login.post') }}" method="POST" class="space-y-4">
+            @csrf
+                
+                <!-- Input Email -->
                 <div>
-                    <label class="block text-xs font-bold text-rose-600 mb-1">Email atau ID Admin</label>
+                    <label class="block text-xs font-bold text-gray-700 mb-1.5">Email Admin</label>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-rose-400">✉</span>
-                        <input type="email" value="admin@sapaindonesia.go.id" class="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-xs focus:ring-rose-500 focus:border-rose-500 text-gray-700" placeholder="admin@sapaindonesia.go.id" required>
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400 text-sm">✉️</span>
+                        <input type="email" name="email" value="Revita@sapa.id" required
+                            placeholder="nama@sapa.id"
+                            class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent transition">
                     </div>
                 </div>
 
+                <!-- Input Password -->
                 <div>
-                    <label class="block text-xs font-bold text-rose-600 mb-1">Password</label>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <label class="block text-xs font-bold text-gray-700">Kata Sandi</label>
+                        <a href="#" class="text-[11px] font-semibold text-rose-500 hover:underline">Lupa sandi?</a>
+                    </div>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-rose-400">🔒</span>
-                        <input type="password" value="••••••••••••" class="w-full pl-9 pr-10 py-2.5 border border-gray-200 rounded-xl text-xs focus:ring-rose-500 focus:border-rose-500 text-gray-700" required>
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer">👁</span>
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400 text-sm">🔒</span>
+                        <input type="password" name="password" value="123456" required
+                            placeholder="Masukkan kata sandi"
+                            class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent transition">
                     </div>
                 </div>
 
-                <button type="submit" class="w-full py-3 bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs rounded-xl shadow-md shadow-rose-200 transition mt-2">
-                    MASUK KE DASHBOARD
-                </button>
+                <!-- Ingat Saya -->
+                <div class="flex items-center justify-between pt-1">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked class="w-4 h-4 rounded text-rose-500 focus:ring-rose-400 border-gray-300">
+                        <span class="text-xs text-gray-600 font-medium">Ingat saya di perangkat ini</span>
+                    </label>
+                </div>
+
+                <!-- Tombol Masuk -->
+                <div class="pt-3">
+                    <button type="submit"
+                        class="w-full py-3 px-4 bg-rose-500 hover:bg-rose-600 active:scale-[0.99] text-white font-bold text-xs rounded-xl shadow-lg shadow-rose-500/25 transition duration-200 flex items-center justify-center gap-2">
+                        <span>Masuk ke Dashboard</span>
+                        <span>→</span>
+                    </button>
+                </div>
             </form>
+
+            <!-- Footer Hak Cipta -->
+            <div class="mt-8 pt-6 border-t border-gray-100 text-center text-gray-400 text-[11px]">
+                &copy; {{ date('Y') }} SAPA - Sahabat Perlindungan Perempuan & Anak.
+            </div>
         </div>
     </div>
 

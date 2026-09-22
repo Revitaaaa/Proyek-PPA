@@ -1,139 +1,147 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'theme.dart';
-
-class WavyHeaderClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.lineTo(0, size.height - 35);
-    var p1 = Offset(size.width / 4, size.height);
-    var e1 = Offset(size.width / 2, size.height - 20);
-    path.quadraticBezierTo(p1.dx, p1.dy, e1.dx, e1.dy);
-
-    var p2 = Offset(size.width * 0.75, size.height - 45);
-    var e2 = Offset(size.width, size.height - 15);
-    path.quadraticBezierTo(p2.dx, p2.dy, e2.dx, e2.dy);
-
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}
+import 'login.dart';
 
 class BaseLayout extends StatelessWidget {
   final Widget child;
   final bool showBackButton;
-  final VoidCallback? onBack;
-  final String? headerTitle;
-  final Widget? headerAction;
 
   const BaseLayout({
     super.key,
     required this.child,
     this.showBackButton = false,
-    this.onBack,
-    this.headerTitle,
-    this.headerAction,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.bgLight,
-      body: Stack(
-        children: [
-          // 1. FORMULIR: Dimulai dari bawah lengkungan header (top: 175)
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 175),
-              child: child,
-            ),
-          ),
-
-          // 2. HEADER TETAP DI ATAS
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: ClipPath(
-              clipper: WavyHeaderClipper(),
-              child: Container(
-                height: 180, // Ditinggikan sedikit agar lebih proporsional
-                width: double.infinity,
-                color: AppTheme.headerPink,
-                child: SafeArea(
-                  bottom: false,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: const Color(0xFFF8F9FA),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              decoration: const BoxDecoration(
+                color: AppTheme.primaryPink,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  showBackButton
+                      ? IconButton(
+                          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      : Row(
                           children: [
-                            showBackButton
-                                ? GestureDetector(
-                                    onTap: onBack ?? () => Navigator.pop(context),
-                                    child: Container(
-                                      width: 36,
-                                      height: 36,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.25),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Icon(Icons.chevron_left,
-                                          color: Colors.white, size: 26),
-                                    ),
-                                  )
-                                : const SizedBox(width: 36),
-                            Row(
-                              children: const [
-                                Icon(Icons.notifications_none,
-                                    color: Colors.white, size: 26),
-                                SizedBox(width: 14),
-                                CircleAvatar(
-                                  radius: 16,
-                                  backgroundColor: Colors.white,
-                                  child: Icon(Icons.person,
-                                      color: AppTheme.headerPink, size: 20),
-                                ),
-                              ],
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(Icons.favorite, color: Colors.white, size: 20),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Sahabat PPA',
+                              style: GoogleFonts.plusJakartaSans(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
-                        if (headerTitle != null) ...[
-                          // Jarak ditambahkan agar tulisan judul turun ke bawah
-                          const SizedBox(height: 14),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                headerTitle!,
-                                style: GoogleFonts.plusJakartaSans(
-                                  color: Colors.white,
-                                  fontSize: 22, // Ukuran font dibuat lebih besar & tegas
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.3,
-                                ),
+
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.notifications_none, color: Colors.white),
+                        onPressed: () {},
+                      ),
+                      const SizedBox(width: 4),
+                      PopupMenuButton<String>(
+                        offset: const Offset(0, 45),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        onSelected: (value) {
+                          if (value == 'logout') {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text('Keluar Akun', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, fontSize: 16)),
+                                content: Text('Apakah Anda yakin ingin keluar dari aplikasi?', style: GoogleFonts.plusJakartaSans(fontSize: 13)),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text('Batal', style: GoogleFonts.plusJakartaSans(color: Colors.grey)),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(builder: (_) => const LoginPage()),
+                                        (route) => false,
+                                      );
+                                    },
+                                    child: Text('Keluar', style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold, color: Colors.red)),
+                                  ),
+                                ],
                               ),
-                              if (headerAction != null) ...[
-                                const SizedBox(width: 8),
-                                headerAction!,
-                              ]
-                            ],
+                            );
+                          }
+                        },
+                        itemBuilder: (BuildContext context) => [
+                          PopupMenuItem<String>(
+                            value: 'logout',
+                            child: Row(
+                              children: [
+                                const Icon(Icons.logout, color: Colors.red, size: 18),
+                                const SizedBox(width: 10),
+                                Text(
+                                  'Keluar',
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
-                      ],
-                    ),
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          child: const CircleAvatar(
+                            radius: 16,
+                            backgroundColor: Color(0xFFFFEEF2),
+                            child: Icon(Icons.person, color: AppTheme.primaryPink, size: 18),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                ],
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: child,
+            ),
+          ],
+        ),
       ),
     );
   }

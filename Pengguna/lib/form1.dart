@@ -33,7 +33,7 @@ class _Form1PageState extends State<Form1Page> {
       context: context,
       initialDate: now,
       firstDate: DateTime(2000),
-      lastDate: now, // Menghalang pemilihan tarikh masa hadapan
+      lastDate: now,
       helpText: 'PILIH TANGGAL KEJADIAN',
       cancelText: 'BATAL',
       confirmText: 'PILIH',
@@ -54,7 +54,6 @@ class _Form1PageState extends State<Form1Page> {
 
     if (picked != null) {
       setState(() {
-        // Format mengikut Hari-Bulan-Tahun (DD-MM-YYYY)
         _tanggalCtrl.text =
             "${picked.day.toString().padLeft(2, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.year}";
       });
@@ -65,7 +64,6 @@ class _Form1PageState extends State<Form1Page> {
   Widget build(BuildContext context) {
     return BaseLayout(
       showBackButton: true,
-      headerTitle: 'Form Pelaporan',
       child: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
         children: [

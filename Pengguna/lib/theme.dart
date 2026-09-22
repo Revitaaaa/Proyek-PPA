@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // Gunakan 10.0.2.2 jika pakai Emulator Android, atau IP Komputer jika pakai HP fisik
-  static const String apiUrl = 'http://10.0.2.2:8000/api';
+  static const String apiUrl = 'http://localhost:8000/api'; // <-- Kurang titik koma (;) di sini
 
   static const Color primaryPink = Color(0xFFE0245E);
   static const Color headerPink = Color(0xFFFF4B72);

@@ -78,7 +78,6 @@ class _Form2PageState extends State<Form2Page> {
   Widget build(BuildContext context) {
     return BaseLayout(
       showBackButton: true,
-      headerTitle: 'Upload Bukti',
       child: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
         children: [
@@ -198,7 +197,7 @@ class _Form2PageState extends State<Form2Page> {
                       lokasi: widget.lokasi,
                       tanggal: widget.tanggal,
                       kronologi: widget.kronologi,
-                      files: _listFoto, // Mengirim daftar foto ke KonfirmasiPage
+                      files: _listFoto,
                     ),
                   ),
                 );

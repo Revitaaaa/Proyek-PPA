@@ -7,7 +7,7 @@
     <!-- Filter & Search Bar -->
     <form method="GET" action="{{ route('laporan.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="relative md:col-span-1">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari ID Laporan, Pelapor, atau Lokasi..." class="w-full pl-9 pr-4 py-2.5 bg-white border border-rose-100 rounded-xl text-xs focus:ring-rose-500 focus:border-rose-500">
+            <input type="text" name="search" value="{{ request('search') }}" autocomplete="off" placeholder="Cari Nama Pelapor..." class="w-full pl-9 pr-4 py-2.5 bg-white border border-rose-100 rounded-xl text-xs focus:ring-rose-500 focus:border-rose-500">
             <span class="absolute left-3 top-2.5 text-gray-400 text-xs">🔍</span>
         </div>
 
@@ -37,7 +37,7 @@
                 <tr class="bg-rose-50/50 text-gray-500 text-xs font-bold uppercase border-b border-rose-100">
                     <th class="py-3 px-4">No Laporan</th>
                     <th class="py-3 px-4">Kategori</th>
-                    <th class="py-3 px-4">Sebagai</th>
+                    <th class="py-3 px-4">Nama Pelapor</th>
                     <th class="py-3 px-4">Lokasi</th>
                     <th class="py-3 px-4">Tanggal</th>
                     <th class="py-3 px-4">Status</th>
@@ -49,20 +49,22 @@
                 <tr>
                     <td class="py-4 px-4 font-bold text-rose-600">{{ $item->nomor_laporan }}</td>
                     <td class="py-4 px-4 font-semibold text-gray-800">{{ $item->kategori }}</td>
-                    <td class="py-4 px-4 text-gray-600">{{ $item->sebagai }}</td>
-                    <td class="py-4 px-4 text-gray-600">{{ $item->lokasi }}</td>
-                    <td class="py-4 px-4 text-gray-500">{{ $item->tanggal_kejadian->format('d Mei Y') }}</td>
+                    <td class="py-4 px-4 font-medium text-gray-700">
+                        {{ $item->nama_pelapor ?? '-' }}
+                    </td>
+                    <td class="py-4 px-4 text-gray-600">{{ $item->lokasi_kejadian }}</td>
+                    <td class="py-4 px-4 text-gray-500">{{ optional($item->tanggal_kejadian)->format('d M Y') ?? '-' }}</td>
                     <td class="py-4 px-4">
-                        @if($item->status == 'Menunggu Verifikasi')
+                        @if($item->status_penanganan == 'Menunggu Verifikasi')
                             <span class="bg-amber-50 text-amber-600 px-3 py-1 rounded-full font-bold">Menunggu Verifikasi</span>
-                        @elseif($item->status == 'Sedang Diproses')
+                        @elseif($item->status_penanganan == 'Sedang Diproses' || $item->status_penanganan == 'Diproses')
                             <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full font-bold">Sedang Diproses</span>
                         @else
                             <span class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-bold">Selesai</span>
                         @endif
                     </td>
                     <td class="py-4 px-4">
-                        <a href="{{ route('laporan.show', $item->id) }}" class="bg-rose-500 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-rose-600 transition">Lihat</a>
+                        <a href="{{ route('laporan.show', $item->id_laporan) }}" class="bg-rose-500 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-rose-600 transition">Lihat</a>
                     </td>
                 </tr>
                 @empty

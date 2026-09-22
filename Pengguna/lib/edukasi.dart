@@ -10,11 +10,13 @@ class EdukasiPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseLayout(
       showBackButton: true,
-      headerTitle: 'Edukasi & Kontak',
       child: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          Text('Hotline Layanan Darurat', style: GoogleFonts.plusJakartaSans(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(
+            'Hotline Layanan Darurat', 
+            style: GoogleFonts.plusJakartaSans(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 12),
           const ListTile(
             tileColor: Colors.white,
