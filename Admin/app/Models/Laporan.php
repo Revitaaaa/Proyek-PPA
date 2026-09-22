@@ -9,19 +9,16 @@ class Laporan extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'nomor_laporan',
-        'kategori',
-        'sebagai',
-        'pelapor_nama',
-        'lokasi',
-        'tanggal_kejadian',
-        'kronologi',
-        'bukti_lampiran',
-        'status',
-        'catatan_admin',
-    ];
+    // Menentukan nama tabel di database secara eksplisit
+    protected $table = 'laporan';
 
+    // Menentukan primary key tabel
+    protected $primaryKey = 'id_laporan';
+
+    // Mengizinkan semua kolom diisi secara massal
+    protected $guarded = [];
+
+    // Format tipe data kolom tanggal jika diperlukan
     protected $casts = [
         'tanggal_kejadian' => 'datetime',
     ];
