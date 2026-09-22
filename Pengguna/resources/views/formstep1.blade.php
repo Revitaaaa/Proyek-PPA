@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('title', 'Form Pelaporan')
+@section('title', 'Form Pelaporan - Sahabat PPA')
 @section('back_url', route('home'))
 @section('header_title', 'Form Pelaporan')
 
@@ -32,13 +32,18 @@
     </div>
 
     <div class="form-group">
-        <label>Tanggal Kejadian</label>
-        <input type="text" name="tanggal_kejadian" class="form-input" value="12 Mei 2025" required>
+    <label>Tanggal Kejadian</label>
+    <input type="date" 
+           name="tanggal_kejadian" 
+           class="form-input" 
+           value="{{ date('Y-m-d') }}" 
+           max="{{ date('Y-m-d') }}" 
+           required>
     </div>
 
     <div class="form-group">
         <label>Penjelasan Kejadian</label>
-        <textarea name="kronologi" rows="4" class="form-input" required>Saya mengalami tindakan kekerasan oleh seseorang di tempat umum pada siang hari...</textarea>
+        <textarea name="kronologi" rows="4" class="form-input" placeholder="Ceritakan kronologi kejadian secara singkat..." required></textarea>
     </div>
 
     <button type="submit" class="btn-pink" style="margin-top: 14px;">Lanjut</button>

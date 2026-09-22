@@ -9,7 +9,7 @@
     <a href="{{ route('lapor.detail', $item->id_laporan) }}" style="flex: 1; text-decoration: none; color: inherit;">
         <strong style="color: var(--primary-pink); font-size: 13px;">LAP-{{ $item->id_laporan }}</strong>
         <p style="font-size: 12px; font-weight: 600; margin: 2px 0;">{{ $item->kategori }}</p>
-        <span style="font-size: 10px; color: var(--text-grey);">{{ $item->created_at->format('d M Y') }}</span>
+        <span style="font-size: 10px; color: var(--text-grey);">{{ $item->created_at ? $item->created_at->format('d M Y') : $item->tanggal_kejadian }}</span>
     </a>
 
     <div style="display: flex; align-items: center; gap: 8px;">
@@ -17,10 +17,12 @@
             {{ $item->status_penanganan }}
         </span>
         
-        <button onclick="openEditModal({{ $item->id_laporan }}, '{{ $item->kategori }}', '{{ $item->lokasi_kejadian }}', '{{ addslashes($item->kronologi) }}')" style="border: none; background: none; color: #D97706; cursor: pointer; font-size: 18px;">
+        <!-- UPDATE (EDIT) -->
+        <button onclick="openEditModal({{ $item->id_laporan }}, '{{ $item->kategori }}', '{{ $item->lokasi_kejadian }}', '{{ addslashes($item->kronologi) }}', '{{ $item->tanggal_kejadian }}')" style="border: none; background: none; color: #D97706; cursor: pointer; font-size: 18px;">
             <i class="bi bi-pencil-square"></i>
         </button>
 
+        <!-- DELETE (HAPUS) -->
         <form action="{{ route('riwayat.destroy', $item->id_laporan) }}" method="POST" onsubmit="return confirm('Hapus laporan ini?')">
             @csrf
             @method('DELETE')
@@ -55,6 +57,10 @@
                 </select>
             </div>
             <div class="form-group">
+                <label>Tanggal Kejadian</label>
+                <input type="date" name="tanggal_kejadian" id="editTanggal" class="form-input" required>
+            </div>
+            <div class="form-group">
                 <label>Lokasi Kejadian</label>
                 <input type="text" name="lokasi_kejadian" id="editLokasi" class="form-input" required>
             </div>
@@ -71,11 +77,12 @@
 </div>
 
 <script>
-function openEditModal(id, kategori, lokasi, kronologi) {
+function openEditModal(id, kategori, lokasi, kronologi, tanggal) {
     document.getElementById('editForm').action = '/riwayat/' + id;
     document.getElementById('editKategori').value = kategori;
     document.getElementById('editLokasi').value = lokasi;
     document.getElementById('editKronologi').value = kronologi;
+    document.getElementById('editTanggal').value = tanggal;
     document.getElementById('editModal').style.display = 'flex';
 }
 function closeEditModal() {

@@ -12,7 +12,7 @@ class LaporanController extends Controller {
     }
 
     public function formStep1() {
-        return view('form-step1');
+        return view('formstep1');
     }
 
     public function formStep2(Request $request) {
@@ -23,7 +23,7 @@ class LaporanController extends Controller {
             'tanggal_kejadian' => 'required|string',
             'kronologi' => 'required|string',
         ]);
-        return view('form-step2', ['data' => $validated]);
+        return view('formstep2', ['data' => $validated]);
     }
 
     public function konfirmasi(Request $request) {

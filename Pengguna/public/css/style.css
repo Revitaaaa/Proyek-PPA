@@ -55,13 +55,17 @@ body {
 .header-title-box {
   margin-top: 10px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center; 
   align-items: center;
+  text-align: center;
 }
 
 .header-title-box h1 {
   font-size: 20px;
   font-weight: 700;
+  color: #ffffff;
+  width: 100%;
+  text-align: center; 
 }
 
 .wavy-svg {
@@ -210,4 +214,9 @@ body {
 
 .bottom-nav a.active {
   color: #fff;
+}
+
+input[type="date"].form-input {
+  cursor: pointer;
+  color: var(--text-dark);
 }

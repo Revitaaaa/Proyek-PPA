@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<a href="{{ route('lapor.step1') }}" style="text-decoration: none;">
+<a href="{{ route('lapor.step1') }}" style="text-decoration: none; display: block; cursor: pointer;">
     <div class="card-box" style="display: flex; align-items: center; justify-content: space-between;">
         <div style="display: flex; align-items: center; gap: 14px;">
             <div style="background: #FFEEF2; padding: 8px 10px; border-radius: 10px; color: var(--primary-pink);">
