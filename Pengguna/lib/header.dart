@@ -58,7 +58,6 @@ class BaseLayout extends StatelessWidget {
                             ),
                           ],
                         ),
-
                   Row(
                     children: [
                       IconButton(
@@ -88,7 +87,7 @@ class BaseLayout extends StatelessWidget {
                                       Navigator.pop(context);
                                       Navigator.pushAndRemoveUntil(
                                         context,
-                                        MaterialPageRoute(builder: (_) => const LoginPage()),
+                                        MaterialPageRoute(builder: (_) => Login(onLoginSuccess: () {})),
                                         (route) => false,
                                       );
                                     },

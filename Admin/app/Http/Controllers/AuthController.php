@@ -13,14 +13,20 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:3|max:7', // Minimal 3, maksimal 7 karakter
+            'nik' => 'required|string|size:16',      // Wajib persis 16 karakter
+            'no_hp' => 'required|string|size:12',    // Wajib persis 12 karakter
+            'email' => 'required|string|email|max:255|unique:user', // Wajib unik/tidak boleh duplikat di tabel user
+            'password' => 'required|string|min:3|max:7', // 3 - 7 karakter
         ]);
 
         $user = User::create([
             'name' => $request->name,
+            'nik' => $request->nik,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'alamat' => $request->alamat,
             'email' => $request->email,
-            'password' => Hash::make($request->password), // Enkripsi password ke database
+            'no_hp' => $request->no_hp,
+            'password' => Hash::make($request->password),
         ]);
 
         return response()->json([
@@ -38,10 +44,8 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Cari user berdasarkan email
         $user = User::where('email', $request->email)->first();
 
-        // Cek apakah user ada dan passwordnya cocok
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'status' => 'error',
