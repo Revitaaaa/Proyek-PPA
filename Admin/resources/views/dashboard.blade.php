@@ -1,8 +1,18 @@
 <x-app-layout>
+    @if(session('success'))
+        <div class="mb-5 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl text-xs font-semibold flex items-center justify-between shadow-sm animate-fade-in">
+            <div class="flex items-center gap-2.5">
+                <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">✓</span>
+                <span>{{ session('success') }}</span>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-emerald-400 hover:text-emerald-600 font-bold text-sm px-2 cursor-pointer">&times;</button>
+        </div>
+    @endif
+
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h2 class="text-2xl font-bold text-rose-600">Selamat datang, Admin</h2>
-            <p class="text-xs text-gray-400">Berikut adalah rangkuman aktivitas laporan hari ini.</p>
+            <h2 class="text-2xl font-black text-gray-800 tracking-tight">Selamat datang, <span class="text-rose-600">{{ Auth::user()->name ?? 'Admin' }}</span> 👋</h2>
+            <p class="text-xs text-gray-400 mt-1">Berikut adalah rangkuman aktivitas laporan perlindungan hari ini.</p>
         </div>
         <div class="flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-xl border border-gray-100 text-xs font-semibold text-gray-600 shadow-sm">
             <span>🗓️</span>

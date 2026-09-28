@@ -15,11 +15,32 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // 1. Akun Admin Utama (Revita)
+        User::updateOrCreate(
+            ['email' => 'revita@gmail.com'],
+            [
+                'name'          => 'Revita Dwi',
+                'nik'           => '3509012345670001',
+                'tanggal_lahir' => '2000-01-01',
+                'alamat'        => 'Jember, Jawa Timur',
+                'no_hp'         => '081234567890',
+                'role'          => 'admin',
+                'password'      => 'admin123', // Otomatis di-hash oleh model User (casts hashed)
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // 2. Akun Admin SAPA Alternatif (admin@sapa.id)
+        User::updateOrCreate(
+            ['email' => 'admin@sapa.id'],
+            [
+                'name'          => 'Administrator SAPA',
+                'nik'           => '3509012345670002',
+                'tanggal_lahir' => '1995-05-15',
+                'alamat'        => 'Pusat Layanan SAPA',
+                'no_hp'         => '082198765432',
+                'role'          => 'admin',
+                'password'      => 'admin123',
+            ]
+        );
     }
 }

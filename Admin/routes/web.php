@@ -7,77 +7,93 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
+use App\Http\Controllers\AdminAuthController;
+use Illuminate\Support\Facades\Hash;
+
 // ========================================================
 // Autentikasi Admin (Login & Logout)
 // ========================================================
-// ========================================================
-// Autentikasi Admin (Login & Logout)
-// ========================================================
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
-
-Route::post('/login', function () {
-    return redirect()->route('dashboard');
-})->name('login.post');
-
-Route::get('/logout', function () {
-    \Illuminate\Support\Facades\Auth::logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect()->route('login');
-})->name('logout');
+Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AdminAuthController::class, 'login'])->name('login.post');
+Route::match(['get', 'post'], '/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
 // ========================================================
-// Dashboard & Manajemen Laporan Web Admin
+// Web Admin Dashboard & Manajemen (Wajib Login Admin)
 // ========================================================
-Route::get('/', [LaporanController::class, 'dashboard'])->name('dashboard');
-Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
-Route::get('/laporan/{id}', [LaporanController::class, 'show'])->name('laporan.show');
-Route::put('/laporan/{id}/status', [LaporanController::class, 'updateStatus'])->name('laporan.update-status');
+Route::middleware('auth')->group(function () {
+    // Dashboard & Laporan
+    Route::get('/', [LaporanController::class, 'dashboard'])->name('dashboard');
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/{id}', [LaporanController::class, 'show'])->name('laporan.show');
+    Route::put('/laporan/{id}/status', [LaporanController::class, 'updateStatus'])->name('laporan.update-status');
 
-// ========================================================
-// Manajemen Pengguna
-// ========================================================
-Route::get('/pengguna', function () {
-    $penggunas = User::latest()->get();
-    return view('pengguna.index', compact('penggunas'));
-})->name('pengguna.index');
+    // Manajemen Pengguna
+    Route::get('/pengguna', function () {
+        $penggunas = User::latest()->get();
+        return view('pengguna.index', compact('penggunas'));
+    })->name('pengguna.index');
 
-Route::get('/pengguna/{id}', function ($id) {
-    $user = User::findOrFail($id);
-    $laporans = Laporan::where('id_pengguna', $id)->latest()->get();
-    return view('pengguna.show', compact('user', 'laporans'));
-})->name('pengguna.show');
+    Route::get('/pengguna/{id}', function ($id) {
+        $user = User::findOrFail($id);
+        $laporans = Laporan::where('id_pengguna', $id)->latest()->get();
+        return view('pengguna.show', compact('user', 'laporans'));
+    })->name('pengguna.show');
 
-// ========================================================
-// Pengaturan Admin (Profil & Ganti Password)
-// ========================================================
-Route::get('/pengaturan', function () {
-    $admin = User::first();
-    return view('pengaturan.index', compact('admin'));
-})->name('pengaturan.index');
+    // Pengaturan Akun Admin
+    Route::get('/pengaturan', function () {
+        $admin = auth()->user();
+        return view('pengaturan.index', compact('admin'));
+    })->name('pengaturan.index');
 
-Route::post('/pengaturan/profil', function (Request $request) {
-    $admin = User::first();
-    if ($admin) {
+    Route::post('/pengaturan/profil', function (Request $request) {
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:user,email,' . auth()->id(),
+        ], [
+            'name.required'  => 'Nama admin wajib diisi.',
+            'email.required' => 'Email admin wajib diisi.',
+            'email.unique'   => 'Email sudah terdaftar untuk pengguna lain.',
+        ]);
+
+        /** @var User $admin */
+        $admin = auth()->user();
         $admin->update([
             'name'  => $request->name,
             'email' => $request->email,
         ]);
-    }
-    return back()->with('success_profil', 'Profil admin berhasil diperbarui!');
-})->name('pengaturan.update-profil');
 
-Route::post('/pengaturan/password', function (Request $request) {
-    $admin = User::first();
-    if ($admin && $request->filled('password_baru')) {
-        $admin->update([
-            'password' => bcrypt($request->password_baru),
+        return back()->with('success_profil', 'Profil admin berhasil diperbarui!');
+    })->name('pengaturan.update-profil');
+
+    Route::post('/pengaturan/password', function (Request $request) {
+        $request->validate([
+            'password_lama'       => 'required',
+            'password_baru'       => 'required|string|min:6',
+            'konfirmasi_password' => 'required|same:password_baru',
+        ], [
+            'password_lama.required'       => 'Kata sandi lama wajib diisi.',
+            'password_baru.required'       => 'Kata sandi baru wajib diisi.',
+            'password_baru.min'            => 'Kata sandi baru minimal 6 karakter.',
+            'konfirmasi_password.required' => 'Konfirmasi kata sandi wajib diisi.',
+            'konfirmasi_password.same'     => 'Konfirmasi kata sandi tidak cocok dengan kata sandi baru.',
         ]);
-    }
-    return back()->with('success_password', 'Kata sandi berhasil diperbarui!');
-})->name('pengaturan.update-password');
+
+        /** @var User $admin */
+        $admin = auth()->user();
+
+        if (!Hash::check($request->password_lama, $admin->password)) {
+            return back()->withErrors([
+                'password_lama' => 'Kata sandi lama yang Anda masukkan tidak sesuai.',
+            ]);
+        }
+
+        $admin->update([
+            'password' => $request->password_baru, // di-hash otomatis oleh casting model User
+        ]);
+
+        return back()->with('success_password', 'Kata sandi berhasil diperbarui!');
+    })->name('pengaturan.update-password');
+});
 
 // ========================================================
 // API Endpoints untuk Flutter Mobile

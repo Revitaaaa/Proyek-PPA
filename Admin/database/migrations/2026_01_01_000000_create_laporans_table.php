@@ -8,24 +8,27 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('laporans', function (Blueprint $table) {
-            $table->id();
-            $table->string('nomor_laporan')->unique(); // Contoh: LAP-2025-0001
-            $table->string('kategori'); // Kekerasan Perempuan, KDRT, Bullying, dll.
-            $table->enum('sebagai', ['Korban', 'Saksi', 'Kerabat']);
-            $table->string('pelapor_nama');
-            $table->string('lokasi'); // Kota/Kabupaten
-            $table->dateTime('tanggal_kejadian');
-            $table->text('kronologi');
-            $table->string('bukti_lampiran')->nullable();
-            $table->enum('status', ['Menunggu Verifikasi', 'Sedang Diproses', 'Selesai'])->default('Menunggu Verifikasi');
-            $table->text('catatan_admin')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('laporan')) {
+            Schema::create('laporan', function (Blueprint $table) {
+                $table->increments('id_laporan');
+                $table->string('nomor_laporan', 50)->nullable();
+                $table->unsignedBigInteger('id_pengguna')->nullable()->default(1);
+                $table->string('nama_pelapor', 100)->nullable();
+                $table->string('kategori', 100);
+                $table->string('sebagai', 50)->nullable();
+                $table->string('lokasi_kejadian', 255)->nullable();
+                $table->date('tanggal_kejadian')->nullable();
+                $table->text('kronologi')->nullable();
+                $table->string('bukti_lampiran', 255)->nullable();
+                $table->string('status_penanganan', 50)->default('Menunggu Verifikasi');
+                $table->text('catatan_admin')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('laporans');
+        Schema::dropIfExists('laporan');
     }
 };

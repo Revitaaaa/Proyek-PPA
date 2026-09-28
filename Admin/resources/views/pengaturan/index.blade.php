@@ -70,17 +70,26 @@
                 @csrf
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Password Lama</label>
-                    <input type="password" name="password_lama" placeholder="Masukkan password lama" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-700 focus:ring-rose-500 focus:border-rose-500 transition">
+                    <input type="password" name="password_lama" placeholder="Masukkan password lama" required class="w-full px-4 py-2.5 bg-white border @error('password_lama') border-rose-500 @else border-gray-200 @enderror rounded-xl text-xs text-gray-700 focus:ring-rose-500 focus:border-rose-500 transition">
+                    @error('password_lama')
+                        <p class="mt-1 text-[11px] text-rose-500 font-semibold">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">Password Baru</label>
-                    <input type="password" name="password_baru" placeholder="Masukkan password baru" required class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-700 focus:ring-rose-500 focus:border-rose-500 transition">
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Password Baru (min. 6 karakter)</label>
+                    <input type="password" name="password_baru" placeholder="Masukkan password baru" required class="w-full px-4 py-2.5 bg-white border @error('password_baru') border-rose-500 @else border-gray-200 @enderror rounded-xl text-xs text-gray-700 focus:ring-rose-500 focus:border-rose-500 transition">
+                    @error('password_baru')
+                        <p class="mt-1 text-[11px] text-rose-500 font-semibold">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Konfirmasi Password Baru</label>
-                    <input type="password" name="konfirmasi_password" placeholder="Konfirmasi password baru" required class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-700 focus:ring-rose-500 focus:border-rose-500 transition">
+                    <input type="password" name="konfirmasi_password" placeholder="Konfirmasi password baru" required class="w-full px-4 py-2.5 bg-white border @error('konfirmasi_password') border-rose-500 @else border-gray-200 @enderror rounded-xl text-xs text-gray-700 focus:ring-rose-500 focus:border-rose-500 transition">
+                    @error('konfirmasi_password')
+                        <p class="mt-1 text-[11px] text-rose-500 font-semibold">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="pt-2">

@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <!-- Navigation Menu (Hanya 3 Menu Utama) -->
+        <!-- Navigation Menu -->
         <nav class="space-y-2">
             <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition {{ request()->routeIs('dashboard') ? 'bg-rose-500 text-white shadow-md shadow-rose-200' : 'text-gray-600 hover:bg-gray-50' }}">
                 <span>🏠</span> Dashboard
@@ -28,6 +28,10 @@
             <a href="{{ route('pengguna.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition {{ request()->routeIs('pengguna.*') ? 'bg-rose-500 text-white shadow-md shadow-rose-200' : 'text-gray-600 hover:bg-gray-50' }}">
                 <span>👤</span> Manajemen Pengguna
             </a>
+
+            <a href="{{ route('pengaturan.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition {{ request()->routeIs('pengaturan.*') ? 'bg-rose-500 text-white shadow-md shadow-rose-200' : 'text-gray-600 hover:bg-gray-50' }}">
+                <span>⚙️</span> Pengaturan Admin
+            </a>
         </nav>
     </div>
 
@@ -38,10 +42,10 @@
            title="Klik untuk Keluar" 
            class="flex items-center justify-between p-2 rounded-2xl hover:bg-rose-50 transition group cursor-pointer">
             <div class="flex items-center gap-3">
-                <img src="https://ui-avatars.com/api/?name=Revita&background=f43f5e&color=fff" class="w-10 h-10 rounded-full object-cover shadow-sm" alt="Revita Profile">
+                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'Admin SAPA') }}&background=f43f5e&color=fff&bold=true" class="w-10 h-10 rounded-full object-cover shadow-sm" alt="User Profile">
                 <div>
-                    <h4 class="font-bold text-sm text-gray-800 leading-tight group-hover:text-rose-600 transition">Revita</h4>
-                    <p class="text-xs text-gray-400">Super Admin</p>
+                    <h4 class="font-bold text-sm text-gray-800 leading-tight group-hover:text-rose-600 transition">{{ Auth::user()->name ?? 'Admin' }}</h4>
+                    <p class="text-xs text-gray-400">{{ Auth::user() && Auth::user()->isAdmin() ? 'Super Admin' : (ucfirst(Auth::user()->role ?? 'Admin')) }}</p>
                 </div>
             </div>
 

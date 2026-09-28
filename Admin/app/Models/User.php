@@ -20,15 +20,23 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-    'name',
-    'nik',
-    'tanggal_lahir',
-    'alamat',
-    'email',
-    'no_hp',
-    'password',
-
+        'name',
+        'nik',
+        'tanggal_lahir',
+        'alamat',
+        'email',
+        'no_hp',
+        'role',
+        'password',
     ];
+
+    /**
+     * Cek apakah user memiliki hak akses sebagai admin.
+     */
+    public function isAdmin(): bool
+    {
+        return strtolower($this->role ?? '') === 'admin';
+    }
 
     /**
      * The attributes that should be hidden for serialization.
