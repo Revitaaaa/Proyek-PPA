@@ -179,7 +179,7 @@ class _MapPickerDialogState extends State<MapPickerDialog> {
             if (_searchResults.isNotEmpty) ...[
               const SizedBox(height: 8),
               Container(
-                maxHeight: 150,
+                constraints: const BoxConstraints(maxHeight: 150),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade50,
                   borderRadius: BorderRadius.circular(10),
