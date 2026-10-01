@@ -17,11 +17,11 @@
 
         <select name="kategori" onchange="this.form.submit()" class="bg-white border border-rose-100 text-xs rounded-xl p-2.5 text-gray-600">
             <option value="">Semua Kategori</option>
-            <option value="Kekerasan terhadap Perempuan" {{ request('kategori') == 'Kekerasan terhadap Perempuan' ? 'selected' : '' }}>Kekerasan Perempuan</option>
-            <option value="KDRT" {{ request('kategori') == 'KDRT' ? 'selected' : '' }}>KDRT</option>
-            <option value="Perundungan (Bullying)" {{ request('kategori') == 'Perundungan (Bullying)' ? 'selected' : '' }}>Bullying</option>
-            <option value="Kekerasan Seksual" {{ request('kategori') == 'Kekerasan Seksual' ? 'selected' : '' }}>Kekerasan Seksual</option>
-            <option value="Kekerasan Anak" {{ request('kategori') == 'Kekerasan Anak' ? 'selected' : '' }}>Kekerasan Anak</option>
+            <option value="Kekerasan terhadap Perempuan" {{ str_contains(request('kategori'), 'Perempuan') ? 'selected' : '' }}>Kekerasan Perempuan</option>
+            <option value="KDRT" {{ request('kategori') == 'KDRT' || str_contains(request('kategori'), 'Rumah Tangga') ? 'selected' : '' }}>KDRT (Rumah Tangga)</option>
+            <option value="Kekerasan terhadap Anak" {{ str_contains(request('kategori'), 'Anak') ? 'selected' : '' }}>Kekerasan Anak</option>
+            <option value="Seksual" {{ str_contains(request('kategori'), 'Seksual') ? 'selected' : '' }}>Pelecehan / Kekerasan Seksual</option>
+            <option value="Perundungan" {{ str_contains(request('kategori'), 'Perundungan') || str_contains(request('kategori'), 'Bullying') ? 'selected' : '' }}>Perundungan (Bullying)</option>
         </select>
 
         <select name="status" onchange="this.form.submit()" class="bg-white border border-rose-100 text-xs rounded-xl p-2.5 text-gray-600">

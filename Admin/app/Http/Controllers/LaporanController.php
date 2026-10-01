@@ -86,7 +86,23 @@ class LaporanController extends Controller
 
         // Filter Dropdown Kategori
         if ($request->filled('kategori')) {
-            $query->where('kategori', $request->kategori);
+            $kategori = trim($request->kategori);
+            $query->where(function ($q) use ($kategori) {
+                $q->where('kategori', 'like', "%{$kategori}%");
+                if ($kategori === 'KDRT' || str_contains($kategori, 'KDRT')) {
+                    $q->orWhere('kategori', 'like', '%KDRT%')
+                      ->orWhere('kategori', 'like', '%Rumah Tangga%');
+                }
+                if (str_contains($kategori, 'Anak')) {
+                    $q->orWhere('kategori', 'like', '%Anak%');
+                }
+                if (str_contains($kategori, 'Seksual')) {
+                    $q->orWhere('kategori', 'like', '%Seksual%');
+                }
+                if (str_contains($kategori, 'Perempuan')) {
+                    $q->orWhere('kategori', 'like', '%Perempuan%');
+                }
+            });
         }
 
         // Filter Dropdown Status Penanganan
