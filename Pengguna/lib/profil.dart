@@ -46,7 +46,7 @@ class ProfilPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 14),
                     Text(
-                      'Revitaaa',
+                      UserSession.name,
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -55,7 +55,7 @@ class ProfilPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'revita@student.ac.id',
+                      UserSession.email,
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 13,
                         color: AppTheme.textGrey,

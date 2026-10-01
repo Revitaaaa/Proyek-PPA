@@ -69,7 +69,11 @@
                                 <p class="text-xs text-gray-400">Berkas Lampiran Laporan</p>
                             </div>
                         </div>
-                        <a href="{{ asset('storage/' . $laporan->bukti_lampiran) }}" target="_blank" class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg">📥</a>
+                        <a href="{{ asset('storage/' . $laporan->bukti_lampiran) }}" target="_blank" class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg flex items-center justify-center" title="Unduh / Lihat Berkas">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                            </svg>
+                        </a>
                     </div>
                 @else
                     <p class="text-gray-400 text-xs italic">Tidak ada bukti lampiran yang disertakan.</p>

@@ -29,7 +29,14 @@ class _HomePageState extends State<HomePage> {
   Future<void> _ambilData() async {
     setState(() => _isLoading = true);
     try {
-      final res = await http.get(Uri.parse('${AppTheme.apiUrl}/riwayat'));
+      final idUser = UserSession.id;
+      String url = '${AppTheme.apiUrl}/riwayat';
+      if (idUser != null) {
+        url += '?id_pengguna=$idUser';
+      } else if (UserSession.name.isNotEmpty && UserSession.name != 'Pengguna') {
+        url += '?nama_pelapor=${Uri.encodeComponent(UserSession.name)}';
+      }
+      final res = await http.get(Uri.parse(url));
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
         if (data['status'] == 'success' && (data['data'] as List).isNotEmpty) {
@@ -111,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Selamat datang,', style: GoogleFonts.plusJakartaSans(fontSize: 12, color: AppTheme.textGrey)),
-                    Text('Revitaaa', style: GoogleFonts.plusJakartaSans(fontSize: 17, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
+                    Text(UserSession.name, style: GoogleFonts.plusJakartaSans(fontSize: 17, fontWeight: FontWeight.bold, color: AppTheme.textDark)),
                     Text('Pengguna', style: GoogleFonts.plusJakartaSans(fontSize: 11, color: AppTheme.textGrey)),
                   ],
                 ),

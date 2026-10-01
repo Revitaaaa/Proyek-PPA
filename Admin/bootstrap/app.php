@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'api/*',
         ]);
+        $middleware->prepend(\App\Http\Middleware\HandlePrivateNetworkAccess::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

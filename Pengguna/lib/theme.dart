@@ -1,8 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Gunakan 10.0.2.2 jika pakai Emulator Android, atau IP Komputer jika pakai HP fisik
-  static const String apiUrl = 'http://localhost:8000/api'; // <-- Kurang titik koma (;) di sini
+  // Gunakan 10.0.2.2 jika pakai Emulator Android, 127.0.0.1 jika Web, atau IP PC jika HP fisik
+  static String get apiUrl {
+    if (kIsWeb) {
+      final host = Uri.base.host.isEmpty ? 'localhost' : Uri.base.host;
+      return 'http://$host:8000/api';
+    }
+    return 'http://10.0.2.2:8000/api';
+  }
 
   static const Color primaryPink = Color(0xFFE0245E);
   static const Color headerPink = Color(0xFFFF4B72);
@@ -19,4 +26,12 @@ class AppTheme {
   static const Color badgeBlueText = Color(0xFF2563EB);
   static const Color badgeGreenBg = Color(0xFFECFDF5);
   static const Color badgeGreenText = Color(0xFF059669);
+}
+
+class UserSession {
+  static Map<String, dynamic>? currentUser;
+
+  static String get name => currentUser?['name'] ?? currentUser?['nama'] ?? 'Pengguna';
+  static String get email => currentUser?['email'] ?? 'pengguna@gmail.com';
+  static int? get id => currentUser?['id'];
 }

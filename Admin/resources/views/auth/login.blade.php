@@ -71,20 +71,20 @@
 
             <!-- Notifikasi Flash Info / Error -->
             @if(session('info'))
-                <div class="w-full max-w-xs mb-4 p-3 bg-blue-50 border border-blue-200 text-blue-800 rounded-xl text-xs text-left flex items-center gap-2">
+                <div class="alert-auto-dismiss w-full max-w-xs mb-4 p-3 bg-blue-50 border border-blue-200 text-blue-800 rounded-xl text-xs text-left flex items-center gap-2">
                     <span>ℹ️</span>
                     <span>{{ session('info') }}</span>
                 </div>
             @endif
             @if(session('error'))
-                <div class="w-full max-w-xs mb-4 p-3 bg-pink-50 border border-pink-200 text-pink-700 rounded-xl text-xs text-left flex items-center gap-2">
+                <div class="alert-auto-dismiss w-full max-w-xs mb-4 p-3 bg-pink-50 border border-pink-200 text-pink-700 rounded-xl text-xs text-left flex items-center gap-2">
                     <span>⚠️</span>
                     <span>{{ session('error') }}</span>
                 </div>
             @endif
 
             <!-- Notifikasi Peringatan Client-Side Validation -->
-            <div id="formAlert" class="w-full max-w-xs mb-3.5 p-3 bg-rose-50 border border-rose-300 text-rose-700 rounded-xl text-xs text-left hidden flex items-start gap-2 shadow-sm animate-bounce-short">
+            <div id="formAlert" class="alert-auto-dismiss w-full max-w-xs mb-3.5 p-3 bg-rose-50 border border-rose-300 text-rose-700 rounded-xl text-xs text-left hidden flex items-start gap-2 shadow-sm animate-bounce-short">
                 <span class="text-base leading-none">⚠️</span>
                 <div class="flex-1">
                     <p class="font-bold text-rose-800 mb-0.5">Peringatan!</p>
@@ -106,7 +106,7 @@
                            placeholder="Email"
                            class="w-full px-4 py-3 bg-[#f0f2f5] border border-transparent @error('email') border-pink-500 bg-pink-50/40 @enderror rounded-xl text-xs text-gray-800 placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition duration-200">
                     
-                    <p id="emailWarning" class="mt-1.5 text-[11px] font-semibold text-rose-600 flex items-center gap-1.5 hidden bg-rose-50 border border-rose-200 px-2.5 py-1.5 rounded-lg">
+                    <p id="emailWarning" class="alert-auto-dismiss mt-1.5 text-[11px] font-semibold text-rose-600 flex items-center gap-1.5 hidden bg-rose-50 border border-rose-200 px-2.5 py-1.5 rounded-lg">
                         <svg class="w-3.5 h-3.5 text-rose-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                         </svg>
@@ -114,7 +114,7 @@
                     </p>
 
                     @error('email')
-                        <p class="mt-1 text-[11px] font-semibold text-pink-600 flex items-center gap-1">
+                        <p class="alert-auto-dismiss mt-1 text-[11px] font-semibold text-pink-600 flex items-center gap-1">
                             <span>⚠</span> <span>{{ $message }}</span>
                         </p>
                     @enderror
@@ -144,7 +144,7 @@
                         </button>
                     </div>
 
-                    <p id="passwordWarning" class="mt-1.5 text-[11px] font-semibold text-rose-600 flex items-center gap-1.5 hidden bg-rose-50 border border-rose-200 px-2.5 py-1.5 rounded-lg">
+                    <p id="passwordWarning" class="alert-auto-dismiss mt-1.5 text-[11px] font-semibold text-rose-600 flex items-center gap-1.5 hidden bg-rose-50 border border-rose-200 px-2.5 py-1.5 rounded-lg">
                         <svg class="w-3.5 h-3.5 text-rose-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                         </svg>
@@ -152,7 +152,7 @@
                     </p>
 
                     @error('password')
-                        <p class="mt-1 text-[11px] font-semibold text-pink-600 flex items-center gap-1">
+                        <p class="alert-auto-dismiss mt-1 text-[11px] font-semibold text-pink-600 flex items-center gap-1">
                             <span>⚠</span> <span>{{ $message }}</span>
                         </p>
                     @enderror
@@ -335,6 +335,38 @@
             modal.classList.remove('flex');
         }
 
+        // Otomatis hilangkan peringatan setelah 3 detik (3000 ms)
+        const activeAlertTimers = new Map();
+
+        function autoDismissAlert(el, delay = 3000) {
+            if (!el) return;
+            if (activeAlertTimers.has(el)) {
+                clearTimeout(activeAlertTimers.get(el));
+            }
+            el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+
+            const timer = setTimeout(() => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(-4px)';
+                setTimeout(() => {
+                    el.classList.add('hidden');
+                }, 500);
+            }, delay);
+
+            activeAlertTimers.set(el, timer);
+        }
+
+        // Terapkan auto-dismiss 3 detik pada semua peringatan saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.alert-auto-dismiss').forEach(function(el) {
+                if (!el.classList.contains('hidden')) {
+                    autoDismissAlert(el, 3000);
+                }
+            });
+        });
+
         // Form Validation & Submit Loading
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             const emailInput = document.getElementById('email');
@@ -363,6 +395,7 @@
                 missingFields.push('Email');
                 emailWarningText.textContent = 'Email tidak boleh kosong!';
                 emailWarning.classList.remove('hidden');
+                autoDismissAlert(emailWarning, 3000);
                 emailInput.classList.add('border-rose-500', 'bg-rose-50/40', 'ring-2', 'ring-rose-400/30');
             }
 
@@ -372,6 +405,7 @@
                 missingFields.push('Kata Sandi');
                 passwordWarningText.textContent = 'Kata sandi tidak boleh kosong!';
                 passwordWarning.classList.remove('hidden');
+                autoDismissAlert(passwordWarning, 3000);
                 passInput.classList.add('border-rose-500', 'bg-rose-50/40', 'ring-2', 'ring-rose-400/30');
             }
 
@@ -388,6 +422,7 @@
                         formAlertText.textContent = 'Silakan masukkan kata sandi Anda terlebih dahulu.';
                     }
                     formAlert.classList.remove('hidden');
+                    autoDismissAlert(formAlert, 3000);
                 }
 
                 // Focus ke field yang kosong pertama kali

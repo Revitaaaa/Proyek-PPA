@@ -33,6 +33,10 @@ Route::middleware('auth')->group(function () {
         return view('pengguna.index', compact('penggunas'));
     })->name('pengguna.index');
 
+    Route::get('/pengguna/login', function () {
+        return view('pengguna.login');
+    })->name('pengguna.login');
+
     Route::get('/pengguna/{id}', function ($id) {
         $user = User::findOrFail($id);
         $laporans = Laporan::where('id_pengguna', $id)->latest()->get();
@@ -155,8 +159,16 @@ Route::get('/api/laporan-terakhir', function () {
     ]);
 });
 
-Route::get('/api/riwayat', function () {
-    $laporan = Laporan::latest()->get();
+Route::get('/api/riwayat', function (Request $request) {
+    $query = Laporan::query();
+
+    if ($request->filled('id_pengguna')) {
+        $query->where('id_pengguna', $request->id_pengguna);
+    } elseif ($request->filled('nama_pelapor')) {
+        $query->where('nama_pelapor', $request->nama_pelapor);
+    }
+
+    $laporan = $query->latest()->get();
 
     return response()->json([
         'status'  => 'success',

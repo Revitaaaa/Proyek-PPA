@@ -7,8 +7,12 @@
     <!-- Filter & Search Bar -->
     <form method="GET" action="{{ route('laporan.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="relative md:col-span-1">
-            <input type="text" name="search" value="{{ request('search') }}" autocomplete="off" placeholder="Cari Nama Pelapor..." class="w-full pl-9 pr-4 py-2.5 bg-white border border-rose-100 rounded-xl text-xs focus:ring-rose-500 focus:border-rose-500">
-            <span class="absolute left-3 top-2.5 text-gray-400 text-xs">🔍</span>
+            <input type="text" name="search" value="{{ request('search') }}" autocomplete="off" placeholder="Cari Nama Pelapor..." class="w-full pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs focus:ring-rose-500 focus:border-rose-500">
+            <span class="absolute left-3 top-3 text-gray-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+            </span>
         </div>
 
         <select name="kategori" onchange="this.form.submit()" class="bg-white border border-rose-100 text-xs rounded-xl p-2.5 text-gray-600">

@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'register.dart';
+import 'navbar.dart';
+import 'theme.dart';
 
 class Login extends StatefulWidget {
-  final VoidCallback onLoginSuccess;
+  final VoidCallback? onLoginSuccess;
 
   const Login({
     super.key,
-    required this.onLoginSuccess,
+    this.onLoginSuccess,
   });
 
   @override
@@ -41,7 +43,8 @@ class _LoginState extends State<Login> {
     if (emailOrHp.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Email/Nomor HP dan Password harus diisi!', style: GoogleFonts.plusJakartaSans()),
+          content: Text('Email/Nomor HP dan Password harus diisi!',
+              style: GoogleFonts.plusJakartaSans()),
           backgroundColor: Colors.red,
         ),
       );
@@ -52,8 +55,11 @@ class _LoginState extends State<Login> {
 
     try {
       final res = await http.post(
-        Uri.parse('http://127.0.0.1:8000/api/login'),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse('${AppTheme.apiUrl}/login'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: jsonEncode({
           'email': emailOrHp,
           'password': password,
@@ -64,6 +70,9 @@ class _LoginState extends State<Login> {
       final data = jsonDecode(res.body);
 
       if (res.statusCode == 200) {
+        if (data['data'] != null) {
+          UserSession.currentUser = data['data'];
+        }
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -72,20 +81,26 @@ class _LoginState extends State<Login> {
           ),
         );
 
-        // Panggil callback sukses login
-        widget.onLoginSuccess();
+        // Panggil callback sukses login jika ada
+        if (widget.onLoginSuccess != null) {
+          widget.onLoginSuccess!();
+        }
 
-        // Navigasi otomatis pindah ke halaman home setelah jeda singkat
-        Future.delayed(const Duration(milliseconds: 800), () {
+        // Navigasi otomatis pindah ke halaman utama (NavbarPage)
+        Future.delayed(const Duration(milliseconds: 600), () {
           if (mounted) {
-            Navigator.pushReplacementNamed(context, '/home');
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const NavbarPage()),
+            );
           }
         });
       } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(data['message'] ?? 'Login gagal!', style: GoogleFonts.plusJakartaSans()),
+            content: Text(data['message'] ?? 'Login gagal!',
+                style: GoogleFonts.plusJakartaSans()),
             backgroundColor: Colors.red,
           ),
         );
@@ -95,7 +110,8 @@ class _LoginState extends State<Login> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Kesalahan jaringan: $e', style: GoogleFonts.plusJakartaSans()),
+          content: Text('Kesalahan jaringan: $e',
+              style: GoogleFonts.plusJakartaSans()),
           backgroundColor: Colors.red,
         ),
       );
@@ -281,7 +297,8 @@ class _LoginState extends State<Login> {
                             ? const SizedBox(
                                 width: 20,
                                 height: 20,
-                                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                    color: Colors.white, strokeWidth: 2),
                               )
                             : Text(
                                 'Masuk',
@@ -307,15 +324,18 @@ class _LoginState extends State<Login> {
                     ),
                     Row(
                       children: [
-                        const Expanded(child: Divider(color: Color(0xFFF0C5D1))),
+                        const Expanded(
+                            child: Divider(color: Color(0xFFF0C5D1))),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Text(
                             'atau',
-                            style: GoogleFonts.plusJakartaSans(fontSize: 9, color: Colors.grey),
+                            style: GoogleFonts.plusJakartaSans(
+                                fontSize: 9, color: Colors.grey),
                           ),
                         ),
-                        const Expanded(child: Divider(color: Color(0xFFF0C5D1))),
+                        const Expanded(
+                            child: Divider(color: Color(0xFFF0C5D1))),
                       ],
                     ),
                     const SizedBox(height: 10),

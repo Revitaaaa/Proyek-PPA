@@ -84,6 +84,7 @@ class BaseLayout extends StatelessWidget {
                                   ),
                                   TextButton(
                                     onPressed: () {
+                                      UserSession.currentUser = null;
                                       Navigator.pop(context);
                                       Navigator.pushAndRemoveUntil(
                                         context,

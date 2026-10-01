@@ -71,8 +71,7 @@ class AdminAuthController extends Controller
 
             $request->session()->regenerate();
 
-            return redirect()->intended(route('dashboard'))
-                ->with('success', 'Selamat datang kembali, ' . ($user->name ?? 'Admin') . '!');
+            return redirect()->intended(route('dashboard'));
         }
 
         RateLimiter::hit($throttleKey, 60);

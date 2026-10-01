@@ -13,10 +13,14 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'nik' => 'required|string|size:16',      // Wajib persis 16 karakter
-            'no_hp' => 'required|string|size:12',    // Wajib persis 12 karakter
-            'email' => 'required|string|email|max:255|unique:user', // Wajib unik/tidak boleh duplikat di tabel user
-            'password' => 'required|string|min:3|max:7', // 3 - 7 karakter
+            'nik' => 'required|string|size:16|unique:user,nik',
+            'no_hp' => 'required|string|min:10|max:13|unique:user,no_hp',
+            'email' => 'required|string|email|max:255|unique:user,email',
+            'password' => 'required|string|min:8',
+        ], [
+            'nik.unique' => 'NIK ini sudah terdaftar.',
+            'email.unique' => 'Email ini sudah terdaftar.',
+            'no_hp.unique' => 'Nomor HP ini sudah terdaftar.',
         ]);
 
         $user = User::create([

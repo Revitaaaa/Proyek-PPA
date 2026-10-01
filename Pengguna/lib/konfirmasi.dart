@@ -45,8 +45,8 @@ class _KonfirmasiPageState extends State<KonfirmasiPage> {
     }
 
     final body = {
-      'id_pengguna': 1,
-      'nama_pelapor': 'Revitaaa',
+      'id_pengguna': UserSession.id ?? 1,
+      'nama_pelapor': UserSession.name,
       'kategori': widget.kategori,
       'sebagai': widget.sebagai,
       'lokasi_kejadian': widget.lokasi,

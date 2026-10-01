@@ -27,7 +27,14 @@ class _RiwayatPageState extends State<RiwayatPage> {
   Future<void> _ambilRiwayat() async {
     setState(() => _loading = true);
     try {
-      final res = await http.get(Uri.parse('${AppTheme.apiUrl}/riwayat'));
+      final idUser = UserSession.id;
+      String url = '${AppTheme.apiUrl}/riwayat';
+      if (idUser != null) {
+        url += '?id_pengguna=$idUser';
+      } else if (UserSession.name.isNotEmpty && UserSession.name != 'Pengguna') {
+        url += '?nama_pelapor=${Uri.encodeComponent(UserSession.name)}';
+      }
+      final res = await http.get(Uri.parse(url));
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
         if (data['status'] == 'success') {
