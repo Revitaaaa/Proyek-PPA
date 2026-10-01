@@ -214,7 +214,7 @@ class _MapPickerDialogState extends State<MapPickerDialog> {
               height: 180,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.rose.shade50.withOpacity(0.5),
+                color: Colors.pink.shade50.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(color: AppTheme.borderPink),
               ),
