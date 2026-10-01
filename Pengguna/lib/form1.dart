@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'theme.dart';
 import 'header.dart';
 import 'form2.dart';
+import 'map_picker_dialog.dart';
 
 class Form1Page extends StatefulWidget {
   const Form1Page({super.key});
@@ -101,7 +102,42 @@ class _Form1PageState extends State<Form1Page> {
           ),
           const SizedBox(height: 16),
 
-          _label('Lokasi Kejadian'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.between,
+            children: [
+              _label('Lokasi Kejadian'),
+              InkWell(
+                onTap: () async {
+                  final selected = await showDialog<String>(
+                    context: context,
+                    builder: (context) => MapPickerDialog(initialLocation: _lokasiCtrl.text),
+                  );
+                  if (selected != null && selected.isNotEmpty) {
+                    setState(() {
+                      _lokasiCtrl.text = selected;
+                    });
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.map_outlined, size: 14, color: AppTheme.primaryPink),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Pilih di Peta (Google Maps)',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primaryPink,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
           TextField(
             controller: _lokasiCtrl,
             style: GoogleFonts.plusJakartaSans(fontSize: 13, color: Colors.black87),
