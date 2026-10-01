@@ -117,7 +117,7 @@ class _MapPickerDialogState extends State<MapPickerDialog> {
           children: [
             // Header Dialog
             Row(
-              mainAxisAlignment: MainAxisAlignment.between,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
