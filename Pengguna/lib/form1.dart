@@ -103,7 +103,7 @@ class _Form1PageState extends State<Form1Page> {
           const SizedBox(height: 16),
 
           Row(
-            mainAxisAlignment: MainAxisAlignment.between,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _label('Lokasi Kejadian'),
               InkWell(
